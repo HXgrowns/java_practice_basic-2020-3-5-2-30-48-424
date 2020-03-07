@@ -8,4 +8,7 @@ public class MasterNumber {
     this.number = number;
   }
 
+  public String getNumber() {
+    return number;
+  }
 }

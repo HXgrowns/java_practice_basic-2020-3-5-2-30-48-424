@@ -14,6 +14,7 @@ class PersonTest {
 
     SimpleAddress expected = new SimpleAddress("street", "city");
 
+
     SimpleAddress actual = person.getSimpleAddress().orElse(new SimpleAddress());
 
     assertEquals(expected, actual);
