@@ -31,36 +31,11 @@ public class PersonSet {
         // TODO: group the data to Stream<Person>
         // Can use Collectors.groupingBy method
         // Can add helper method
-        List<Person> people = new ArrayList<>();
-        if (masterNumbers.size() == 0) {
-            return Stream.empty();
-        }
-        for (MasterNumber masterNumber : masterNumbers) {
-            people.add(new Person(masterNumber.getNumber(), getPointTelephone(masterNumber), getPointAddress(masterNumber), getPointEmail(masterNumber)));
-        }
-        return people.stream();
-    }
 
-    public Address getPointAddress(MasterNumber masterNumber) {
-        List<Address> filterAddress = Optional.of(addresses.stream().filter(address -> address.getMasterNumber().equals(masterNumber.getNumber())))
-                .orElse(Stream.empty())
-                .collect(Collectors.toList());
-        if (filterAddress.isEmpty()) {
-            return null;
-        }
-        return filterAddress.get(filterAddress.size() - 1);
-    }
-
-    public List<Telephone> getPointTelephone(MasterNumber masterNumber) {
-        return Optional.of(telephones.stream().filter(telephone -> telephone.getMasterNumber().equals(masterNumber.getNumber())))
-                .orElse(Stream.empty())
-                .collect(Collectors.toList());
-    }
-
-    public List<Email> getPointEmail(MasterNumber masterNumber) {
-        return Optional.of(emails.stream().filter(email -> email.getMasterNumber().equals(masterNumber.getNumber())))
-                .orElse(Stream.empty())
-                .collect(Collectors.toList());
+        Map<String, Address> addressMap = this.addresses.stream().collect(Collectors.toMap(Address::getMasterNumber, address -> address));
+        Map<String, List<Telephone>> telephoneMap = this.telephones.stream().collect(Collectors.groupingBy(Telephone::getMasterNumber));
+        Map<String, List<Email>> emailsMap = this.emails.stream().collect(Collectors.groupingBy(Email::getMasterNumber));
+        return this.masterNumbers.stream().map(masterNumber -> new Person(masterNumber.getNumber(), telephoneMap.getOrDefault(masterNumber.getNumber(), new ArrayList<>()), addressMap.getOrDefault(masterNumber.getNumber(), null), emailsMap.getOrDefault(masterNumber.getNumber(), new ArrayList<>())));
     }
 
     public List<Address> getAddresses() {

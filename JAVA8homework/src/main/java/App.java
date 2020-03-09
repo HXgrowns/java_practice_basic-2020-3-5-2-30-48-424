@@ -1,6 +1,5 @@
 import entity.MasterNumber;
 import entity.Person;
-
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.stream.Stream;
